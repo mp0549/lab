@@ -419,6 +419,28 @@ div[data-theme] { background: transparent !important; }
   50% { opacity: 0.25; }
 }
 
+/* ── Portfolio link (top left, mirrors SysStatus) ── */
+.lab-portfolio-link {
+  position: absolute;
+  top: 1.2rem;
+  left: 1.5rem;
+  font-family: 'Courier New', monospace;
+  font-size: 0.58rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: #666;
+  text-decoration: none;
+  border: 1px solid #ccc;
+  padding: 0.4rem 0.7rem;
+  z-index: 10;
+  transition: background 140ms ease, color 140ms ease, border-color 140ms ease;
+}
+.lab-portfolio-link:hover {
+  background: #1a1a1a;
+  color: #fff;
+  border-color: #1a1a1a;
+}
+
 /* ── Module grid ── */
 .lab-grid {
   display: grid;

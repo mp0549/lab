@@ -54,6 +54,14 @@ export default function MainMenu() {
 
   return (
     <div className={`grid-bg${isIdle ? ' idle' : ''}`}>
+      <a
+        href="https://mp0549.github.io/my-portfolio/"
+        target="_blank"
+        rel="noopener noreferrer"
+        className="lab-portfolio-link"
+      >
+        RESEARCHER PORTFOLIO ↗
+      </a>
       <SysStatus />
 
       <main className="lab-main">
