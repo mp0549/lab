@@ -7,7 +7,7 @@ import brickbreaker from '../src/assets/thumbnails/brickbreaker.png';
 const games = [
     {
     id: 'cryptogram',
-    title: 'Cryptogram Love Notes',
+    title: 'Cryptogram',
     tagline: 'Decrypt the messages!',
     route: '#/cryptogram',
     image: cryptogramthumbnail
