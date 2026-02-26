@@ -1221,3 +1221,76 @@ div[data-theme] { background: transparent !important; }
   text-align: center;
   padding: 0.55rem 1rem 0.7rem;
 }
+
+
+/* ═══════════════════════════════════════════════
+   404 NOT FOUND PAGE
+   ═══════════════════════════════════════════════ */
+
+.notfound-panel {
+  background: #fff;
+  border: 1px solid #1a1a1a;
+  max-width: 480px;
+  width: 100%;
+}
+
+.notfound-body {
+  padding: 2.5rem 2rem 2rem;
+  text-align: center;
+}
+
+.notfound-code {
+  font-family: 'Times New Roman', serif;
+  font-size: clamp(5rem, 22vw, 8rem);
+  font-weight: 900;
+  letter-spacing: 0.04em;
+  line-height: 1;
+  color: #1a1a1a;
+  margin: 0.5rem 0 0;
+}
+
+.notfound-rule {
+  margin: 1.75rem 0;
+}
+
+.notfound-status {
+  font-family: 'Courier New', monospace;
+  font-size: 0.62rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #888;
+  margin-bottom: 0.4rem;
+}
+
+.notfound-status strong {
+  color: #1a1a1a;
+  font-weight: 700;
+}
+
+.notfound-msg {
+  font-family: 'Courier New', monospace;
+  font-size: 0.62rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #aaa;
+  min-height: 1.5em;
+  margin-bottom: 2rem;
+}
+
+.notfound-btn {
+  display: inline-flex;
+}
+
+.notfound-foot {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  padding: 0.55rem 1rem;
+  font-family: 'Courier New', monospace;
+  font-size: 0.55rem;
+  letter-spacing: 0.16em;
+  color: #bbb;
+  text-transform: uppercase;
+}
