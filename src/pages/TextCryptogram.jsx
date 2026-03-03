@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useEffect } from "react";
+import React, { useState, useMemo, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import Confetti from "react-confetti";
@@ -172,6 +172,26 @@ function moveToPrevLetter(data, index) {
   return index;
 }
 
+/* Group data into word chunks to prevent mid-word line breaks */
+function groupIntoWords(data) {
+  const words = [];
+  let current = [];
+
+  data.forEach((cell, i) => {
+    if (cell.type === "space") {
+      if (current.length > 0) {
+        words.push(current);
+        current = [];
+      }
+    } else {
+      current.push({ cell, index: i });
+    }
+  });
+
+  if (current.length > 0) words.push(current);
+  return words;
+}
+
 /* ============================================================ */
 
 export default function Cryptogram() {
@@ -181,10 +201,16 @@ export default function Cryptogram() {
   const [phrase, setPhrase] = useState(null);
   const [loading, setLoading] = useState(true);
   const [revealsUsed, setRevealsUsed] = useState(0);
+  const [checksUsed, setChecksUsed] = useState(0);
+  const [wrongFlash, setWrongFlash] = useState(null);
+  const [showHelp, setShowHelp] = useState(false);
+  const wrongFlashTimer = useRef(null);
 
   const [mode, setMode] = useState("random");
   const [category, setCategory] = useState("general");
   const [difficulty, setDifficulty] = useState("easy");
+
+  const hintsScore = checksUsed + revealsUsed * 3;
 
   /* ============================================================
      CACHED FETCH (GLOBAL CACHE)
@@ -195,6 +221,7 @@ export default function Cryptogram() {
 
     const loadPuzzle = async () => {
       setRevealsUsed(0);
+      setChecksUsed(0);
 
       if (puzzleCache[key]) {
         setPhrase(puzzleCache[key]);
@@ -341,6 +368,8 @@ export default function Cryptogram() {
   const handleRestart = () => {
     setActiveIndex(null);
     setGuesses({});
+    setRevealsUsed(0);
+    setChecksUsed(0);
     setRestartKey((x) => x + 1);
   };
 
@@ -378,9 +407,35 @@ export default function Cryptogram() {
     setRevealsUsed((r) => r + 1);
   };
 
+  const checkCurrentLetter = () => {
+    if (activeIndex === null || data[activeIndex]?.type !== "letter") return;
+
+    const cell = data[activeIndex];
+    const guess =
+      difficulty === "easy" ? guesses[cell.code] : guesses[activeIndex];
+
+    if (!guess) return;
+
+    setChecksUsed((c) => c + 1);
+
+    if (guess.toUpperCase() !== cell.plain) {
+      setWrongFlash(activeIndex);
+      if (wrongFlashTimer.current) clearTimeout(wrongFlashTimer.current);
+      wrongFlashTimer.current = setTimeout(() => setWrongFlash(null), 700);
+    }
+  };
+
   /* ============================================================
      RENDER
   ============================================================ */
+
+  const words = groupIntoWords(data);
+
+  const activeCell = activeIndex !== null ? data[activeIndex] : null;
+  const activeGuess = activeCell?.type === "letter"
+    ? (difficulty === "easy" ? guesses[activeCell.code] : guesses[activeIndex]) || ""
+    : "";
+  const canCheck = activeCell?.type === "letter" && activeGuess.length > 0;
 
   return (
     <div className="grid-bg crypto-page">
@@ -393,7 +448,13 @@ export default function Cryptogram() {
             <p className="crypto-eyebrow">EXPERIMENT — CIPHER DECRYPTION</p>
             <h1 className="crypto-title">CRYPTOGRAM</h1>
           </div>
-          <span className="crypto-header-led" aria-hidden="true" />
+          <button
+            className="crypto-help-btn"
+            onClick={() => setShowHelp(true)}
+            title="How to play"
+          >
+            ?
+          </button>
         </div>
 
         <div className="crypto-rule" />
@@ -456,33 +517,41 @@ export default function Cryptogram() {
         ) : (
           <>
             <div className="crypto-cells-wrap">
-              {data.map((cell, i) => {
-                if (cell.type === "space")
-                  return <div key={i} className="crypto-space" />;
+              {words.map((word, wi) => (
+                <div key={wi} className="crypto-word">
+                  {word.map(({ cell, index }) => {
+                    if (cell.type === "punct") {
+                      return (
+                        <div key={index} className="crypto-punct">
+                          {cell.char}
+                        </div>
+                      );
+                    }
 
-                if (cell.type === "punct")
-                  return <div key={i} className="crypto-punct">{cell.char}</div>;
+                    const guess =
+                      difficulty === "easy"
+                        ? guesses[cell.code] || ""
+                        : guesses[index] || "";
 
-                const guess =
-                  difficulty === "easy"
-                    ? guesses[cell.code] || ""
-                    : guesses[i] || "";
+                    const isActive = index === activeIndex;
+                    const isCorrect =
+                      guess !== "" && guess.toUpperCase() === cell.plain;
+                    const isWrong = index === wrongFlash;
 
-                const isActive = i === activeIndex;
-                const isCorrect = guess !== "" && guess.toUpperCase() === cell.plain;
-
-                return (
-                  <div
-                    key={i}
-                    onClick={() => setActiveIndex(i)}
-                    className={`crypto-cell${isActive ? " active" : ""}${isCorrect ? " correct" : ""}`}
-                  >
-                    <div className="crypto-cell-guess">{guess}</div>
-                    <div className="crypto-cell-divider" />
-                    <div className="crypto-cell-code">{cell.code}</div>
-                  </div>
-                );
-              })}
+                    return (
+                      <div
+                        key={index}
+                        onClick={() => setActiveIndex(index)}
+                        className={`crypto-cell${isActive ? " active" : ""}${isCorrect ? " correct" : ""}${isWrong ? " wrong" : ""}`}
+                      >
+                        <div className="crypto-cell-guess">{guess}</div>
+                        <div className="crypto-cell-divider" />
+                        <div className="crypto-cell-code">{cell.code}</div>
+                      </div>
+                    );
+                  })}
+                </div>
+              ))}
             </div>
 
             <div className="crypto-rule" />
@@ -498,19 +567,75 @@ export default function Cryptogram() {
             <div className="crypto-rule" />
 
             <div className="crypto-actions">
+              <button
+                onClick={checkCurrentLetter}
+                className={`crypto-action-btn${!canCheck ? " disabled" : ""}`}
+                disabled={!canCheck}
+              >
+                CHECK LETTER
+              </button>
               <button onClick={revealRandomLetter} className="crypto-action-btn">
                 REVEAL LETTER
               </button>
               <button onClick={handleRestart} className="crypto-action-btn">
                 NEW PUZZLE
               </button>
-              {revealsUsed > 0 && (
-                <span className="crypto-reveal-count">REVEALS: {revealsUsed}</span>
+              {hintsScore > 0 && (
+                <span className="crypto-reveal-count">
+                  HINTS: {hintsScore}
+                </span>
               )}
             </div>
           </>
         )}
       </div>
+
+      {/* ── How to Play overlay ── */}
+      <AnimatePresence>
+        {showHelp && (
+          <motion.div
+            className="crypto-solved-overlay"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={() => setShowHelp(false)}
+          >
+            <div
+              className="crypto-solved-panel"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <p className="crypto-solved-eyebrow">EXPERIMENT BRIEFING</p>
+              <h2 className="crypto-solved-title">HOW TO PLAY</h2>
+              <div className="crypto-rule" />
+              <div className="crypto-help-body">
+                <p>Each letter in the phrase has been replaced by a number. The same number always represents the same letter throughout the puzzle.</p>
+                <p>Click any cell to select it, then type a letter to fill in your guess. Figure out what each number represents to decode the full message.</p>
+                <div className="crypto-help-hints">
+                  <p className="crypto-help-hint-title">HINTS</p>
+                  <div className="crypto-help-hint-row">
+                    <span className="crypto-help-hint-cost">+1</span>
+                    <span><strong>CHECK LETTER</strong> — reveals whether your current guess is correct or wrong.</span>
+                  </div>
+                  <div className="crypto-help-hint-row">
+                    <span className="crypto-help-hint-cost">+3</span>
+                    <span><strong>REVEAL LETTER</strong> — automatically fills in a random unsolved letter.</span>
+                  </div>
+                </div>
+                <p className="crypto-help-tip">Goal: decode the phrase using as few hints as possible.</p>
+              </div>
+              <div className="crypto-rule" style={{ margin: "1.25rem 0 1rem" }} />
+              <div className="crypto-solved-actions">
+                <button
+                  onClick={() => setShowHelp(false)}
+                  className="crypto-action-btn"
+                >
+                  GOT IT
+                </button>
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* ── Solved overlay ── */}
       <AnimatePresence>
@@ -531,8 +656,18 @@ export default function Cryptogram() {
               <h2 className="crypto-solved-title">CIPHER DECODED</h2>
               <div className="crypto-rule" />
               <p className="crypto-solved-phrase">"{puzzle.phrase}"</p>
-              {revealsUsed > 0 && (
-                <p className="crypto-solved-meta">REVEALS USED: {revealsUsed}</p>
+              {hintsScore === 0 ? (
+                <p className="crypto-solved-meta">SOLVED WITHOUT HINTS!</p>
+              ) : (
+                <p className="crypto-solved-meta">
+                  HINTS USED: {hintsScore}
+                  {checksUsed > 0 && revealsUsed > 0 &&
+                    ` (${checksUsed} check${checksUsed !== 1 ? "s" : ""} + ${revealsUsed} reveal${revealsUsed !== 1 ? "s" : ""})`}
+                  {checksUsed > 0 && revealsUsed === 0 &&
+                    ` (${checksUsed} check${checksUsed !== 1 ? "s" : ""})`}
+                  {revealsUsed > 0 && checksUsed === 0 &&
+                    ` (${revealsUsed} reveal${revealsUsed !== 1 ? "s" : ""})`}
+                </p>
               )}
               <div className="crypto-solved-actions">
                 <button onClick={handleRestart} className="crypto-action-btn">

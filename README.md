@@ -94,7 +94,8 @@ Then yes.
 
 
 To redeploy after changes: 
-npm run deploy
-git add docs
+npm run build
+git add .
 git commit -m "Update site"
 git push
+npm run deploy

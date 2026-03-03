@@ -657,7 +657,7 @@ div[data-theme] { background: transparent !important; }
 .crypto-panel {
   background: #fff;
   border: 1px solid #1a1a1a;
-  max-width: 760px;
+  max-width: 1000px;
   width: 100%;
 }
 
@@ -690,7 +690,7 @@ div[data-theme] { background: transparent !important; }
 }
 .crypto-eyebrow {
   font-family: 'Courier New', monospace;
-  font-size: 0.55rem;
+  font-size: 0.65rem;
   letter-spacing: 0.2em;
   text-transform: uppercase;
   color: #999;
@@ -705,15 +705,27 @@ div[data-theme] { background: transparent !important; }
   color: #1a1a1a;
   line-height: 1;
 }
-.crypto-header-led {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: #e8c940;
-  border: 1px solid #c4a820;
-  box-shadow: 0 0 5px rgba(232, 201, 64, 0.7);
-  animation: sys-pulse 3s ease-in-out infinite;
+/* Help button replaces LED in header */
+.crypto-help-btn {
+  font-family: 'Courier New', monospace;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0;
+  color: #1a1a1a;
+  background: transparent;
+  border: 1px solid #1a1a1a;
+  width: 28px;
+  height: 28px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   flex-shrink: 0;
+  transition: background 140ms ease, color 140ms ease;
+}
+.crypto-help-btn:hover {
+  background: #1a1a1a;
+  color: #fff;
 }
 
 /* ── Divider ── */
@@ -738,11 +750,11 @@ div[data-theme] { background: transparent !important; }
 }
 .crypto-ctrl-label {
   font-family: 'Courier New', monospace;
-  font-size: 0.58rem;
+  font-size: 0.68rem;
   letter-spacing: 0.18em;
   text-transform: uppercase;
   color: #999;
-  width: 72px;
+  width: 84px;
   flex-shrink: 0;
 }
 .crypto-toggle-group {
@@ -752,13 +764,13 @@ div[data-theme] { background: transparent !important; }
 }
 .crypto-toggle {
   font-family: 'Courier New', monospace;
-  font-size: 0.6rem;
+  font-size: 0.7rem;
   letter-spacing: 0.14em;
   text-transform: uppercase;
   color: #666;
   background: transparent;
   border: 1px solid #ccc;
-  padding: 0.25rem 0.65rem;
+  padding: 0.3rem 0.8rem;
   cursor: pointer;
   transition: border-color 120ms ease, background 120ms ease, color 120ms ease;
 }
@@ -776,25 +788,29 @@ div[data-theme] { background: transparent !important; }
 .crypto-cells-wrap {
   display: flex;
   flex-wrap: wrap;
-  gap: 5px 6px;
-  padding: 1.5rem 1rem;
+  gap: 8px 32px;
+  padding: 1.75rem 1.25rem;
   justify-content: center;
 }
-.crypto-space {
-  width: 14px;
+/* Each word stays together — no mid-word line breaks */
+.crypto-word {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 4px;
+  align-items: flex-end;
 }
 .crypto-punct {
   font-family: 'Times New Roman', serif;
-  font-size: 1rem;
+  font-size: 1.1rem;
   color: #555;
   align-self: flex-end;
-  padding-bottom: 5px;
+  padding-bottom: 6px;
 }
 .crypto-cell {
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 30px;
+  width: 38px;
   cursor: pointer;
   border: 1px solid #d0d0d0;
   transition: border-color 120ms ease, background 120ms ease;
@@ -810,11 +826,21 @@ div[data-theme] { background: transparent !important; }
 .crypto-cell.correct {
   border-color: #1a1a1a;
 }
+.crypto-cell.wrong {
+  border-color: #c0392b;
+  background: #fdf0ef;
+  animation: wrong-flash 0.7s ease;
+}
+@keyframes wrong-flash {
+  0%   { background: #fde8e6; border-color: #c0392b; }
+  50%  { background: #ffd5d2; border-color: #e74c3c; }
+  100% { background: #fdf0ef; border-color: #c0392b; }
+}
 .crypto-cell-guess {
-  height: 22px;
+  height: 28px;
   width: 100%;
   font-family: 'Courier New', monospace;
-  font-size: 0.78rem;
+  font-size: 0.9rem;
   font-weight: 700;
   color: #1a1a1a;
   display: flex;
@@ -825,6 +851,9 @@ div[data-theme] { background: transparent !important; }
 .crypto-cell.active .crypto-cell-guess {
   color: #fff;
 }
+.crypto-cell.wrong .crypto-cell-guess {
+  color: #c0392b;
+}
 .crypto-cell-divider {
   width: 100%;
   height: 1px;
@@ -833,11 +862,14 @@ div[data-theme] { background: transparent !important; }
 .crypto-cell.active .crypto-cell-divider {
   background: #555;
 }
+.crypto-cell.wrong .crypto-cell-divider {
+  background: #e8b4b0;
+}
 .crypto-cell-code {
-  height: 15px;
+  height: 20px;
   width: 100%;
   font-family: 'Courier New', monospace;
-  font-size: 0.52rem;
+  font-size: 0.68rem;
   color: #aaa;
   display: flex;
   align-items: center;
@@ -855,20 +887,20 @@ div[data-theme] { background: transparent !important; }
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 5px;
-  padding: 1rem 1rem;
+  gap: 6px;
+  padding: 1.25rem 1rem;
 }
 .crypto-key-row {
   display: flex;
-  gap: 4px;
+  gap: 8px;
   flex-wrap: wrap;
   justify-content: center;
 }
 .crypto-key {
-  width: 32px;
-  height: 32px;
+  width: 42px;
+  height: 42px;
   font-family: 'Courier New', monospace;
-  font-size: 0.65rem;
+  font-size: 0.9rem;
   font-weight: 600;
   letter-spacing: 0.05em;
   color: #1a1a1a;
@@ -891,8 +923,9 @@ div[data-theme] { background: transparent !important; }
 }
 .crypto-key.ctrl {
   width: auto;
-  padding: 0 10px;
-  min-width: 36px;
+  padding: 0 14px;
+  min-width: 46px;
+  font-size: 0.8rem;
 }
 
 /* ── Actions row ── */
@@ -901,18 +934,18 @@ div[data-theme] { background: transparent !important; }
   align-items: center;
   justify-content: center;
   gap: 0.75rem;
-  padding: 1rem;
+  padding: 1rem 1rem 1.25rem;
   flex-wrap: wrap;
 }
 .crypto-action-btn {
   font-family: 'Courier New', monospace;
-  font-size: 0.62rem;
-  letter-spacing: 0.16em;
+  font-size: 0.72rem;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
   color: #1a1a1a;
   background: transparent;
   border: 1px solid #1a1a1a;
-  padding: 0.4rem 1rem;
+  padding: 0.5rem 1.1rem;
   cursor: pointer;
   text-decoration: none;
   display: inline-flex;
@@ -927,9 +960,15 @@ div[data-theme] { background: transparent !important; }
   background: #000;
   color: #fff;
 }
+.crypto-action-btn.disabled,
+.crypto-action-btn:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+  pointer-events: none;
+}
 .crypto-reveal-count {
   font-family: 'Courier New', monospace;
-  font-size: 0.58rem;
+  font-size: 0.7rem;
   letter-spacing: 0.14em;
   text-transform: uppercase;
   color: #aaa;
@@ -1007,6 +1046,64 @@ div[data-theme] { background: transparent !important; }
   margin-top: 1.25rem;
 }
 
+/* ── How to Play modal body ── */
+.crypto-help-body {
+  text-align: left;
+  padding: 1rem 0 0;
+}
+.crypto-help-body p {
+  font-family: 'Courier New', monospace;
+  font-size: 0.7rem;
+  letter-spacing: 0.04em;
+  line-height: 1.7;
+  color: #555;
+  margin-bottom: 0.75rem;
+}
+.crypto-help-hints {
+  border: 1px solid #e0e0e0;
+  padding: 0.75rem 1rem;
+  margin: 0.75rem 0;
+}
+.crypto-help-hint-title {
+  font-family: 'Courier New', monospace;
+  font-size: 0.6rem !important;
+  letter-spacing: 0.2em !important;
+  color: #bbb !important;
+  margin-bottom: 0.6rem !important;
+}
+.crypto-help-hint-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  margin-bottom: 0.5rem;
+}
+.crypto-help-hint-row:last-child {
+  margin-bottom: 0;
+}
+.crypto-help-hint-cost {
+  font-family: 'Courier New', monospace;
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #1a1a1a;
+  background: #f0f0f0;
+  border: 1px solid #ddd;
+  padding: 0.1rem 0.4rem;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.crypto-help-hint-row span:last-child {
+  font-family: 'Courier New', monospace;
+  font-size: 0.68rem;
+  letter-spacing: 0.03em;
+  line-height: 1.6;
+  color: #555;
+}
+.crypto-help-tip {
+  font-style: italic;
+  color: #999 !important;
+  font-size: 0.65rem !important;
+}
+
 
 /* ═══════════════════════════════════════════════
    BREAKOUT PAGE
@@ -1025,24 +1122,24 @@ div[data-theme] { background: transparent !important; }
   display: flex;
   align-items: center;
   gap: 1.25rem;
-  padding: 0.55rem 1rem;
+  padding: 0.65rem 1rem;
   flex-wrap: wrap;
 }
 .bb-stat-group {
   display: flex;
   align-items: center;
-  gap: 0.4rem;
+  gap: 0.5rem;
 }
 .bb-stat-label {
   font-family: 'Courier New', monospace;
-  font-size: 0.58rem;
+  font-size: 0.68rem;
   letter-spacing: 0.16em;
   text-transform: uppercase;
   color: #999;
 }
 .bb-stat-val {
   font-family: 'Courier New', monospace;
-  font-size: 0.72rem;
+  font-size: 0.88rem;
   font-weight: 700;
   letter-spacing: 0.1em;
   color: #1a1a1a;
@@ -1050,29 +1147,35 @@ div[data-theme] { background: transparent !important; }
 .bb-lives {
   display: flex;
   align-items: center;
-  gap: 3px;
+  gap: 5px;
 }
 .bb-life-pip {
-  width: 18px;
-  height: 18px;
+  width: 26px;
+  height: 26px;
   object-fit: contain;
   display: block;
+  transition: opacity 0.2s, filter 0.2s;
+}
+.bb-life-pip.lost {
+  opacity: 0.25;
+  filter: grayscale(1);
 }
 .bb-ctrl-group {
   display: flex;
-  gap: 0.35rem;
+  gap: 0.4rem;
   margin-left: auto;
   flex-wrap: wrap;
+  align-items: center;
 }
 .bb-toggle {
   font-family: 'Courier New', monospace;
-  font-size: 0.58rem;
+  font-size: 0.62rem;
   letter-spacing: 0.14em;
   text-transform: uppercase;
   color: #777;
   background: transparent;
   border: 1px solid #ccc;
-  padding: 0.25rem 0.6rem;
+  padding: 0.3rem 0.7rem;
   cursor: pointer;
   transition: border-color 120ms ease, background 120ms ease, color 120ms ease;
 }
@@ -1085,41 +1188,77 @@ div[data-theme] { background: transparent !important; }
   color: #fff;
   border-color: #1a1a1a;
 }
+/* LAB button gets extra weight to stand out */
+.bb-toggle:first-child {
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  border-width: 2px;
+  border-color: #aaa;
+  color: #555;
+  padding: 0.32rem 0.85rem;
+}
+.bb-toggle:first-child:hover {
+  border-color: #1a1a1a;
+  color: #1a1a1a;
+}
+.bb-toggle.on:first-child {
+  background: #1a1a1a;
+  border-color: #1a1a1a;
+  color: #fff;
+  box-shadow: 0 0 0 3px rgba(0,0,0,0.08);
+}
 
 /* ── Mutation countdown ── */
 .bb-countdown {
   font-family: 'Courier New', monospace;
-  font-size: 0.58rem;
+  font-size: 0.66rem;
   letter-spacing: 0.18em;
   text-transform: uppercase;
   color: #aaa;
-  padding: 0.2rem 1rem 0.3rem;
+  padding: 0.25rem 1rem 0.35rem;
 }
 
-/* ── Per-mutation indicator ── */
-.bb-mutation-bar {
+/* ── Mutation status chips ── */
+.bb-mut-indicators {
   display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.35rem 1rem;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  padding: 0.5rem 1rem 0.6rem;
+}
+.bb-mut-chip {
   font-family: 'Courier New', monospace;
-  font-size: 0.6rem;
-  letter-spacing: 0.16em;
+  font-size: 0.58rem;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: var(--mut-color, #e8c940);
-  background: color-mix(in srgb, var(--mut-color, #e8c940) 8%, transparent);
-  border-top: 1px solid color-mix(in srgb, var(--mut-color, #e8c940) 35%, transparent);
-  border-bottom: 1px solid color-mix(in srgb, var(--mut-color, #e8c940) 35%, transparent);
-  animation: bb-mut-pulse 1.8s ease-in-out infinite;
+  padding: 0.25rem 0.65rem;
+  border: 1px solid rgba(0,0,0,0.12);
+  color: rgba(0,0,0,0.28);
+  background: rgba(0,0,0,0.03);
+  border-radius: 2px;
+  cursor: pointer;
+  user-select: none;
+  transition: color 0.3s, border-color 0.3s, background 0.3s, box-shadow 0.3s;
 }
-.bb-mut-warn {
-  font-weight: 900;
-  font-size: 0.75rem;
-  line-height: 1;
+.bb-mut-chip:hover {
+  color: rgba(0,0,0,0.5);
+  border-color: rgba(0,0,0,0.25);
+  background: rgba(0,0,0,0.07);
 }
-@keyframes bb-mut-pulse {
+.bb-mut-chip.active {
+  color: var(--mut-color);
+  border-color: color-mix(in srgb, var(--mut-color) 60%, transparent);
+  background: color-mix(in srgb, var(--mut-color) 10%, transparent);
+  box-shadow: 0 0 8px color-mix(in srgb, var(--mut-color) 35%, transparent);
+  animation: bb-chip-pulse 2s ease-in-out infinite;
+}
+.bb-mut-chip.active:hover {
+  opacity: 0.7;
+  animation: none;
+}
+@keyframes bb-chip-pulse {
   0%, 100% { opacity: 1; }
-  50%       { opacity: 0.6; }
+  50%       { opacity: 0.65; }
 }
 
 /* ── Canvas wrapper ── */
@@ -1236,7 +1375,7 @@ div[data-theme] { background: transparent !important; }
 /* ── Instructions ── */
 .bb-instructions {
   font-family: 'Courier New', monospace;
-  font-size: 0.55rem;
+  font-size: 0.65rem;
   letter-spacing: 0.14em;
   text-transform: uppercase;
   color: #bbb;
