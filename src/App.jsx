@@ -3,6 +3,7 @@ import { Routes, Route } from 'react-router-dom';
 import MainMenu from './pages/MainMenu';
 import Cryptogram from './pages/TextCryptogram';
 import BrickBreaker from './pages/BrickBreaker';
+import CatchingGame from './pages/CatchingGame';
 import NotFound from './pages/NotFound';
 
 import './index.css';
@@ -14,6 +15,7 @@ export default function App(){
         <Route path="/" element={<MainMenu />} />
         <Route path="/cryptogram" element={<Cryptogram />} />
         <Route path="/breakout" element={<BrickBreaker />} />
+        <Route path="/catch" element={<CatchingGame />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </div>
