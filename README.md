@@ -96,6 +96,6 @@ Then yes.
 To redeploy after changes: 
 npm run build
 git add .
-git commit -m "Update site"
+git commit -m "Update Site"
 git push
 npm run deploy

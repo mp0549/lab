@@ -24,6 +24,7 @@ export default function GameCard({ title, subtitle, href, image, moduleId, onAcc
         <div className="module-sep" />
         <h3 className="module-title-text">{title}</h3>
         {subtitle && <p className="module-tagline-text">{subtitle}</p>}
+        <div class="module-barcode"></div>
       </div>
 
       <div className="module-foot">

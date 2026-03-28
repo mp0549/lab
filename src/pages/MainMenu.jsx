@@ -1,10 +1,20 @@
 import React, { useEffect, useRef, useState } from 'react';
 import GameCard from '../components/GameCard';
 import games from '../gamesData';
+import { color } from 'framer-motion';
 
 function SysStatus() {
-  const states = ['CALIBRATING…', 'MONITORING SUBJECT', 'ANOMALY DETECTED', 'STABLE'];
-  const [idx, setIdx] = useState(0);
+  const states = [
+    'INITIALIZING SENSORS…',
+    'CALIBRATING…',
+    'SYNCING TELEMETRY…',
+    'MONITORING SUBJECT',
+    'ANALYZING PATTERNS…',
+    'ANOMALY DETECTED',
+    'ISOLATING SIGNAL…',
+    'RECALIBRATING…',
+    'STABLE'
+  ];  const [idx, setIdx] = useState(0);
 
   useEffect(() => {
     const t = setInterval(() => setIdx((i) => (i + 1) % states.length), 6000);
@@ -21,7 +31,7 @@ function SysStatus() {
 
 export default function MainMenu() {
   const [accessCount, setAccessCount] = useState(0);
-  const [buildLabel, setBuildLabel] = useState('BUILD 0.1.3');
+  const [buildLabel, setBuildLabel] = useState('BUILD 0.4.2');
   const [buildFlicker, setBuildFlicker] = useState(false);
   const [isIdle, setIsIdle] = useState(false);
   const idleTimer = useRef(null);
@@ -45,7 +55,7 @@ export default function MainMenu() {
     if (accessCount >= 2) {
       setBuildFlicker(true);
       const t = setTimeout(() => {
-        setBuildLabel('BUILD 0.1.4');
+        setBuildLabel('BUILD 0.4.2');
         setTimeout(() => setBuildFlicker(false), 400);
       }, 300);
       return () => clearTimeout(t);
@@ -59,8 +69,9 @@ export default function MainMenu() {
         target="_blank"
         rel="noopener noreferrer"
         className="lab-portfolio-link"
+        // style={{ backgroundColor: 'darkgray', color: 'white' }}
       >
-        RESEARCHER PORTFOLIO ↗
+        RESEARCHER PORTFOLIO
       </a>
       <SysStatus />
 
