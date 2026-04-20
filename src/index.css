@@ -1568,3 +1568,66 @@ animation: blink 1.5s step-end infinite;
   color: #bbb;
   text-transform: uppercase;
 }
+
+/* ── GameTemplate ─────────────────────────────────────────────────────────── */
+.gt-panel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  max-width: 580px;
+  margin: 0 auto;
+  padding: 1.5rem 1rem 2rem;
+  gap: 0;
+}
+
+.gt-status {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  width: 100%;
+  padding: 0.5rem 0.75rem;
+}
+
+.gt-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.gt-stat-label {
+  font-family: 'Courier New', monospace;
+  font-size: 0.5rem;
+  letter-spacing: 0.2em;
+  color: #666;
+  text-transform: uppercase;
+}
+
+.gt-stat-val {
+  font-family: 'Courier New', monospace;
+  font-size: 1.1rem;
+  letter-spacing: 0.12em;
+  color: #e0e0e0;
+}
+
+.gt-canvas-wrap {
+  position: relative;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.gt-canvas {
+  display: block;
+  border: 1px solid #2a2a3a;
+}
+
+.gt-instructions {
+  font-family: 'Courier New', monospace;
+  font-size: 0.5rem;
+  letter-spacing: 0.2em;
+  color: #555;
+  text-transform: uppercase;
+  text-align: center;
+  padding: 0.5rem 0;
+}
