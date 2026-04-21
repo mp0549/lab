@@ -1,6 +1,7 @@
 import cryptogramthumbnail from '../src/assets/thumbnails/cryptogram.png';
 import brickbreaker from '../src/assets/thumbnails/brickbreaker.png';
 import connect4thumbnail from '../src/assets/thumbnails/connect4.png';
+import teekothumbnail from '../src/assets/thumbnails/connect4.png';
 
 
 const games = [
@@ -18,6 +19,13 @@ const games = [
     route: '#/breakout',
     image: brickbreaker
   },
+  {
+    id: 'teeko',
+    title: 'Teeko',
+    tagline: 'Play Teeko against an overpowered AI or a friend.',
+    route: 'https://mp0549.github.io/teeko_ai/',
+    image: teekothumbnail
+  },  
   {
     id: 'connect4',
     title: 'Connect 4',
